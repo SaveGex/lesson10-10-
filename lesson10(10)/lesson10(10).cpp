@@ -1,7 +1,13 @@
-﻿#include <ctime>
+﻿#include <iostream>
+#include <iomanip>
+#include <Windows.h>
+#include <ctime>
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+
+//bonk2 = find(array.begin(), array.end(), bot1);
+//index_bot = distance(array.begin(), bonk2);
 
 using namespace std;
 //vector<int> Sort(vector <int> &arr) {
@@ -39,19 +45,28 @@ int Min(vector <int> arr, int lenght) {
 }
 int main() {
 	srand(time(nullptr));
-	int lenght = 3;
+	int lenght;//=10
 	int min, max;
+	cout << "Write lenght of array: ";
+	cin >> lenght;
 	vector <int> array(lenght);
 
 	for (short i = 0; i < lenght; i++) {
 		array[i] = rand() % 50;
 	}
 	for (auto i : array) {
-		cout << "\n" << i << ' ';
+		cout << i << ' ';
 	}
+	cout << endl;
 	min = Min(array, lenght);
 	max = Max(array, lenght);
-	cout << "\n" << "min: " << min << "\n" << "max: " << max;
+	auto amount = find(array.begin(), array.end(), min);
+	int index = distance(array.begin(), amount);
+	cout << "\n" << "min: " << min << '(' << index << ')';
+
+	auto amount1 = find(array.begin(), array.end(), max);
+	int index1 = distance(array.begin(), amount1);
+	cout << "\n" << "max: " << max << '(' << index1 << ')';
 
 
 }

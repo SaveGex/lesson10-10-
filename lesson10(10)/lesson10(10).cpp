@@ -10,32 +10,60 @@
 //index_bot = distance(array.begin(), bonk2);
 
 using namespace std;
-vector<int> Sorting(vector <int> &array);
+int Counter(vector <int> &array);
 
 int main() {
 	srand(time(nullptr));
-	int lenght = 5;
+	int lenght = 20;
 	vector <int> array(lenght);
 
 	for (short i = 0; i < lenght; i++) {
-		array[i] = rand() % 50;
+		array[i] = -100+rand()%(100+100+1);
 	}
 	for (auto i : array) {
 		cout << i << ' ';
 	}
 	cout << endl;
-	sort(array.begin(), array.end());
-	array= Sorting(array);
-	for (auto i : array) {
-		cout << i << ' ';
-	}
 
+	int counter_pos = Counter(array);
+	int counter_neg = Counter(array);
+	int counter_zero = Counter(array);
+	cout << "\nAmount positive digits: " << counter_pos;
+	cout << "\nAmount negetive digits: " << counter_neg;
+	cout << "\nAmount zero digits: " << counter_zero;
 
 }
-vector<int> Sorting(vector <int> &array) {
-	int size = array.size();
-	for (short i = 0; i < array.size() / 2; i++) {
-		swap(array[i], array[size-1-i]);
+int Counter(vector <int> &array) {
+	static int counter_pos=-1;
+	static int counter_neg=-1;
+	static int counter_zero=-1;
+
+	if (counter_pos == -1) {
+		counter_pos++;
+		for (int i = 0; i < array.size(); i++) {
+			if (array[i] > 0) {
+				counter_pos++;
+			}
+		}
+		return counter_pos;
 	}
-	return array;
+	else if (counter_neg == -1) {
+		counter_neg++;
+		for (int i = 0; i < array.size(); i++) {
+			if (array[i] < 0) {
+				counter_neg++;
+			}
+		}
+		return counter_neg;
+	}
+	else if (counter_zero == -1) {
+		counter_zero++;
+		for (int i = 0; i < array.size(); i++) {
+			if (array[i] == 0) {
+				counter_zero++;
+			}
+		}
+		return counter_zero;
+	}
 }
+

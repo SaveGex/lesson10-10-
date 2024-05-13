@@ -10,45 +10,11 @@
 //index_bot = distance(array.begin(), bonk2);
 
 using namespace std;
-//vector<int> Sort(vector <int> &arr) {
-//	int quest_sort;
-//	cout << "How you want to sort this array? From lower To Biggest[1] opposite[2]";
-//	cin >> quest_sort;
-//	if (quest_sort == 1) {
-//		sort(arr.begin(), arr.end());
-//		return arr;
-//	}
-//	else{
-//		reverse(arr.begin(), arr.end());
-//		return arr;
-//	}
-//}
-int Max(vector <int> arr, int lenght) {
-	int big;
-	big = arr[0];
-	for (short i = 0; i < lenght; i++) {
-		if (big <= arr[i]) {
-			big = arr[i];
-		}
-	}
-	return big;
-}
-int Min(vector <int> arr, int lenght) {
-	int low;
-	low = arr[0];
-	for (short i = 0; i < lenght; i++) {
-		if (low >= arr[i]) {
-			low = arr[i];
-		}
-	}
-	return low;
-}
+vector<int> Sorting(vector <int> &array);
+
 int main() {
 	srand(time(nullptr));
-	int lenght;//=10
-	int min, max;
-	cout << "Write lenght of array: ";
-	cin >> lenght;
+	int lenght = 5;
 	vector <int> array(lenght);
 
 	for (short i = 0; i < lenght; i++) {
@@ -58,15 +24,18 @@ int main() {
 		cout << i << ' ';
 	}
 	cout << endl;
-	min = Min(array, lenght);
-	max = Max(array, lenght);
-	auto amount = find(array.begin(), array.end(), min);
-	int index = distance(array.begin(), amount);
-	cout << "\n" << "min: " << min << '(' << index << ')';
-
-	auto amount1 = find(array.begin(), array.end(), max);
-	int index1 = distance(array.begin(), amount1);
-	cout << "\n" << "max: " << max << '(' << index1 << ')';
+	sort(array.begin(), array.end());
+	array= Sorting(array);
+	for (auto i : array) {
+		cout << i << ' ';
+	}
 
 
+}
+vector<int> Sorting(vector <int> &array) {
+	int size = array.size();
+	for (short i = 0; i < array.size() / 2; i++) {
+		swap(array[i], array[size-1-i]);
+	}
+	return array;
 }

@@ -14,7 +14,7 @@ using namespace std;
 template <typename T1>
 T1 Fill_Array(T1 &array) {
 	for (int i = 0; i < 20; i++) {
-		int digit = 1 + rand() % (20 - 1 + 1);
+		int digit = 1 + rand() % (20);// -1 + 1);
 		array.push_back(digit);
 	}
 	return array;
@@ -39,37 +39,54 @@ int main(){
 
 	array = Scatter_the_element(array);
 
+	for (int i : array) {
+		cout << i << ' ';
+	}
 
 	return 0;
 }
 
 vector<int> Scatter_the_element(vector<int> array) {
 	int element;
-	vector <int> buffer_array;
+
 	cout << "Оберіть елемент: ";	
 	cin >> element;
+
 	auto check_element = find(array.begin(), array.end(), element);
+
 	if (check_element == array.end()) {
+
 		while (true) {
+
 			cout << "\nОберіть елемент: ";	
 			cin >> element;
 			auto check_element = find(array.begin(), array.end(), element);
+
 			if (check_element != array.end())	break;
 		}
 	}
 	int index = distance(array.begin(), check_element);
-	reverse(array.begin(), array.end());
-	for (short i = 0; i < index; i++) {
-		buffer_array.push_back(array[i]);
-	}
-	for (short i = 0; i < index; i++) {
-		array.erase(array.begin());
-	}
-	sort(array.begin(), array.end());
-	//array.insert(0, buffer_array.begin(), buffer_array.end());
+
+	cout <<"Index: " << index << endl;
 
 
-	return buffer_array;
+
+	for (short j = 0; j < array.size(); j++) {
+		for (short i = 0; i < index; i++) {
+			if (array[i] < array[i + 1]) {
+				swap(array[i], array[i + 1]);
+			}
+		}
+	}
+	for (short j = 0; j < array.size(); j++) {
+		for (short i = 0; i < (array.size() - 1) - index; i++) {
+			if (array[index + i] > array[index + i + 1]) {
+				swap(array[index + i], array[index + i + 1]);
+			}
+		}
+	}
+
+	return array;
 }
 
 

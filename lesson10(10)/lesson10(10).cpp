@@ -11,55 +11,50 @@
 
 using namespace std;
 
-int find_position(vector<int>& array) {
-	vector<int> amount_ten;
-	int min_digit, index;
-	for (int i = 0; i < array.size()/10; i++) {
-		int result = 0;
+const int size = 10;
 
-		for (int j = 0; j < array.size(); j++) {
 
-			result += array[j];
-			if ((j % 10 == 0 || j==99) && j != 0) {
-				amount_ten.push_back(result);
-				result = 0;
-			}
-		}
+vector <int> Join(vector <int> *array, ...) {
+	vector <int> concatenated_array;
+	va_list args;
+	va_start(args, array);
+	for (int i = 0; i < ::size; i++) {
+		int digit = va_arg(args, int);
+		concatenated_array.push_back(digit);
 	}
-	min_digit = amount_ten[0];
-	index = 0;
-	for (int i = 0; i < amount_ten.size(); i++) {
-		if (amount_ten[i] < min_digit) {
-			index = i;
-			min_digit = amount_ten[i];
-		}
-	}
-	sort(amount_ten.begin(), amount_ten.end());
-	for (auto i : amount_ten) {
-		cout << i << ' ';
-	}
-	cout << endl;
-	return index;
+	va_end(args);
+	return concatenated_array;
 }
 
 int main() {
 	srand(time(nullptr));
 	vector <int> array;
-	for (int i = 0; i < 100; i++) {
-		array.push_back(0 + rand() % (999 - 0 + 1));
+	vector <int> array2;
+	vector <int> concatenated_array;
+
+	for (int i = 0; i < 10; i++) {
+		array.push_back(0 + rand() % (99 + 0 - 1));
+		array2.push_back(0 + rand() % (99 + 0 - 1));
 	}
+	cout << endl;
 	for (auto i : array) {
-		if (i < 10) {
-			cout << ' ';
-		}
-		if (i < 100) {
-			cout << ' ';
-		}
+		if (i < 10)	cout << ' ';
 		cout << i << ' ';
 	}
 	cout << endl;
-	cout << find_position(array);
 
+	for (auto i : array2) {
+		if (i < 10)	cout << ' ';
+		cout << i << ' ';
+	}
+	cout << endl;
+
+	concatenated_array = Join(&array, &array2);
+
+	for (auto i : concatenated_array) {
+		if (i < 10)	cout << ' ';
+		cout << i << ' ';
+	}
 
 
 

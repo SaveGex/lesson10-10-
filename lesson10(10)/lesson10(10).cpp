@@ -13,100 +13,41 @@
 
 using namespace std;
 
-vector <int> Count_Digit(int* array, int* array2, int& size, int& size2) {
-	vector <int> vector_array;
-	for(int i=0; i<size; i++){
 
-		bool ticket = true;
-
-		for (int j = 0; j < size; j++) {
-			if (j != size - 1 && j == i)	j++;
-			if (j == size-1)	break;
-			if (*(array + i) == *(array + j)) {
-				ticket = false;
-				break;
-			}
-		}
-		if (ticket) {
-			for (int j = 0; j < size2; j++) {
-				if (*(array + i) == *(array2 + j)) {
-					ticket = false;
-					break;
-				}
-			}
-		}
-		if (ticket) {
-			vector_array.push_back(*(array + i));
-		}
-	}
-	
-
-	return vector_array;
-}
-
-void Make_array(int *array, int *array2, int& size, int& size2) {
-	vector <int> vector_array;
-	int index = 0;
-	int counter = 0;
-	vector_array = Count_Digit(array, array2, size, size2);
-	counter = vector_array.size();
-	int* array3 = new int[counter];
-
-	cout << endl;
-
-	for (int i = 0; i < counter; i++) {
-		*(array3 + i) = vector_array[i];
-		cout << *(array3 + i) << ' ';
-		if (*(array3 + i) < 10) {
-			cout << ' ';
-		}
-
-	}
-	
-
-	delete[] array3;
-}
 
 int main() {
-	srand(time(nullptr));
-	int size, size2;
 
-	cout << "Write first amount: ";
-	cin >> size;
 
-	int *array = new int[size];
+	int  m1 = 5, m2 = 5;
 
-	cout << "Write second amount: ";
-	cin >> size2;
-	int* array2 = new int[size2];
+	int** pArr = new int* [m1];
 
-	for (int i = 0; i < size; i++) {
-		array[i] = rand() % 20;
-	}
-	for (int i = 0; i < size2; i++) {
-		array2[i] = rand() % 10;
-	}
-	cout << endl;
+	for (int i = 0; i < m1; i++) {
 
-	for (int i = 0; i < size; i++) {
-		cout << array[i] << ' ';
-		if (array[i] < 10)		cout << ' ';
-	}	
-	cout << endl;
-	for (int i = 0; i < size2; i++) {
-		cout << array2[i] << ' ';
-		if (array2[i] < 10)		cout << ' ';
+		pArr[i] = new int[m2];
+
 	}
 
+	// Доступ до елементів масиву виконується як звичайно  
 
+	for (int i = 0; i < m1; i++) {
+		for (int a = 0; a < m2; a++) {
+			pArr[i][a] = rand() % 100;
+			cout << ' ' << pArr[i][a];
+			if (pArr[i][a] < 10)	cout << ' ';
+		}
+		cout << endl;
+	}
 
-	Make_array(array, array2, size, size2);
+	// Послідовне видалення двовимірного масиву...  
 
+	for (int i = 0; i < m1; i++) {
 
+		delete[]pArr[i];
 
+	}
 
-	delete[] array;
-	delete[] array2;
+	delete[]pArr;
 
 	return 0; 
 }

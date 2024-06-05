@@ -11,36 +11,37 @@
 
 using namespace std;
 
-void Reversee(vector <int> &array, int &size) {
+void Reversee(int *array, int& size) {
 	int* arr = new int[size];
 	for (int i = 0; i < size; i++) {
-		arr[i] = array[size - i - 1];
+		arr[i] = *(array + size - i - 1);
 	}
 	for (int i = 0; i < size; i++) {
-		array[i] = arr[i];
+		*(array+i) = arr[i];
 	}
 	delete[] arr;
 }
 
 int main() {
 	srand(time(nullptr));
-	vector <int> array;
 	int size = 10;
+	int* array = new int[size];
 
 	for (int i = 0; i < size; i++) {
-		array.push_back(rand() % 99);
+		array[i] = rand() % 99;
 	}
-	for (int i = 0; i<array.size(); i++) {
+	for (int i = 0; i<size; i++) {
 		if (array[i] < 10)	cout << ' ';
 		cout << ' ' << array[i];
 	}
 	cout << endl;
 	Reversee(array, size);
-	for (int i = 0; i < array.size(); i++) {
+	for (int i = 0; i < size; i++) {
 		if (array[i] < 10)	cout << ' ';
 		cout << ' ' << array[i];
 	}
 
+	delete[] array;
 
 
 	return 0; 

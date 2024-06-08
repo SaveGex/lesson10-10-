@@ -13,100 +13,170 @@
 
 using namespace std;
 
-vector <int> Count_Digit(int* array, int* array2, int& size, int& size2) {
-	vector <int> vector_array;
-	for (int i = 0; i < size; i++) {
 
-		bool ticket = true;
 
-		for (int j = 0; j < size; j++) {
-			if (j != size - 1 && j == i)	j++;
-			if (j == size - 1)	break;
-			if (*(array + i) == *(array + j)) {
-				ticket = false;
-				break;
-			}
-		}
-		if (ticket) {
-			for (int j = 0; j < size2; j++) {
-				if (*(array + i) == *(array2 + j)) {
-					ticket = false;
-					break;
-				}
-			}
-		}
-		if (ticket) {
-			vector_array.push_back(*(array + i));
+void Odd_Print(short size, short* array) {
+	short counter = 0;
+	for (short i = 0; i < size; i++) {
+		if (*(array + i) % 2 != 0) {
+			counter++;
 		}
 	}
 
+	short* odd_array = new short[counter];
+	short index = NULL;
 
-	return vector_array;
+	for (short i = 0; i < size; i++) {
+		if (*(array + i) % 2 != 0) {
+			odd_array[index] = *(array + i);
+			index++;
+		}
+	}
+
+	for (short i = 0; i < index; i++) {
+		cout << odd_array[i] << ' ';
+	}
+
+	delete[] odd_array;
+
 }
 
-void Make_array(int* array, int* array2, int& size, int& size2) {
-	vector <int> vector_array;
-	int index = 0;
-	int counter = 0;
-	vector_array = Count_Digit(array, array2, size, size2);
-	counter = vector_array.size();
-	int* array3 = new int[counter];
 
-	cout << endl;
 
-	for (int i = 0; i < counter; i++) {
-		*(array3 + i) = vector_array[i];
-		cout << *(array3 + i) << ' ';
-		if (*(array3 + i) < 10) {
-			cout << ' ';
+void Even_Print(short size, short* array) {
+
+	short counter = 0;
+
+	for (short i = 0; i < size; i++) {
+		if (*(array + i) % 2 == 0) {
+			counter++;
+		}
+	}
+
+	short* even_array = new short[counter];
+	short index = NULL;
+
+	for (short i = 0; i < size; i++) {
+		if (*(array + i) % 2 == 0) {
+			even_array[index] = *(array + i);
+			index++;
+		}
+	}
+
+	for (short i = 0; i < index; i++) {
+		cout << even_array[i] << ' ';
+	}
+
+	delete[] even_array;
+}
+
+
+
+bool Check(char *amount) {
+
+	bool ticket = true;
+	if (!isdigit(*amount)) {
+		ticket = false;
+	}
+
+	return ticket;
+}
+
+
+
+void Cleaning_array(short *array, short& size) {
+	short digit;
+	char amount;
+	bool ticket;
+
+
+	cout << "\nWrite you want to find neodd[1] or even[2]: ";
+	cin >> amount;
+
+	ticket = Check(&amount );
+
+	if (!ticket) {
+
+		while (!ticket) {
+			cout << "\nWrite you want to find neodd[1] or even[2]: ";
+			cin >> amount;
+			ticket = Check(&amount);
 		}
 
 	}
+	if (ticket) {
 
+		digit = amount - '0';
 
-	delete[] array3;
+		if (digit == 1) {
+
+			Odd_Print(size, array);
+			
+		}
+		else if (digit == 2) {
+
+			Even_Print(size, array);
+
+		}
+		else cout << "impossible variant";
+	}
 }
+
+
+
 
 int main() {
 	srand(time(nullptr));
-	int size, size2;
 
-	cout << "Write first amount: ";
-	cin >> size;
+	bool repeat = false;
+	short size, size2, digit=0, to_random = 99;
+	bool ticket = false, first_ticket = true;
 
-	int* array = new int[size];
+	do {
+		//it's as second main
 
-	cout << "Write second amount: ";
-	cin >> size2;
-	int* array2 = new int[size2];
+		char amount = 0;
 
-	for (int i = 0; i < size; i++) {
-		array[i] = rand() % 20;
-	}
-	for (int i = 0; i < size2; i++) {
-		array2[i] = rand() % 10;
-	}
-	cout << endl;
+		if (!first_ticket) {
+			cout << "\nOne more time? Yes[1] Not[2]";
+			cin >> amount;
 
-	for (int i = 0; i < size; i++) {
-		cout << array[i] << ' ';
-		if (array[i] < 10)		cout << ' ';
-	}
-	cout << endl;
-	for (int i = 0; i < size2; i++) {
-		cout << array2[i] << ' ';
-		if (array2[i] < 10)		cout << ' ';
-	}
+			ticket = Check(&amount);
+			if (!ticket) {
+				while (!ticket) {
+					ticket = Check(&amount);
+				}
+			}
+		}
+		if (ticket || first_ticket) {
+			digit = amount - '0';
+			if (digit == 1 || first_ticket) {
 
+				cout << "Write size array: ";
+				cin >> size;
 
+				short* array = new short[size];
 
-	Make_array(array, array2, size, size2);
+				for (short i = 0; i < size; i++) {
+					array[i] = rand() % to_random;
+				}
 
+				cout << endl;
 
+				for (short i = 0; i < size; i++) {
+					cout << array[i] << ' ';
+				}
+				repeat = true;
 
-
-	delete[] array;
-	delete[] array2;
+				Cleaning_array(array, size);
+				delete[] array;
+				first_ticket = false;
+			}
+			else {
+				repeat = false;
+			}
+		}
+	} while (repeat);
 
 	return 0;
 }

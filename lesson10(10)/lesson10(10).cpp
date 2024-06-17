@@ -14,14 +14,17 @@ using namespace std;
 void Fill_Array(string digits, vector <int>* array);
 bool Check_Correct_Input(string check);
 int Infinite_Question(string check);
+void Erase(int index, vector<int>* array);
 
 int main() {
 	srand(time(nullptr));
 
 	int check_int, index;
 	bool ticket = true; //цикл
-	string digits; 
+	string digits;
 	vector <int> array;
+	vector<int> digits_which_be_move;
+	vector<int> buffer_array;
 
 
 	while (ticket) {
@@ -36,7 +39,7 @@ int main() {
 		bool ticket_correct = Check_Correct_Input(check);
 
 		if (!ticket_correct) {
-			 check_int = Infinite_Question(check);
+			check_int = Infinite_Question(check);
 		}
 		else {
 			check_int = stoi(check);
@@ -53,16 +56,44 @@ int main() {
 		cout << array[i] << ' ';
 	}
 
-	/*cout << "Which numbers you want to move: ";
-	getline(cin, digits);*/
+	cout << "(the numbers must match completely)\nWhich numbers you want to move: ";
+	getline(cin, digits);
+	Fill_Array(digits, &digits_which_be_move);
 
+	for (int a = 0; a < array.size(); a++) {
+		if (digits_which_be_move.size() > 0) {
+			for (int i = 0; i < digits_which_be_move.size(); i++) {
+				if (digits_which_be_move[i] == array[a]) {
+					buffer_array.push_back(digits_which_be_move[i]);
+					Erase(a, &array);
+					if (a == 0)	a = 0; // Уменьшение индекса a после удаления элемента
+					else		a--;
+					break;
+				}
+			}
+		}
+	}
+	cout << "Where to move the numbers: ";
+	cin >> index;
+	index--;
+	if (index > array.size()) {
+		index = array.size();
+	}
+	for (int i = 0; i < buffer_array.size(); i++) {
+		array.insert(array.begin() + index + i, buffer_array[i]);
+	}
 
-	
-
-
-
+	for (int i = 0; i < array.size(); i++) {
+		cout << array[i] << ' ';
+	}
 	return 0;
 }
+
+
+void Erase(int index, vector<int>* array) {
+	array->erase(array->begin() + index);
+}
+
 
 
 int Infinite_Question(string check) {
@@ -111,15 +142,19 @@ bool Check_Correct_Input(string check) {
 
 
 
-void Fill_Array(string digits, vector <int>* array){
+void Fill_Array(string digits, vector <int>* array) {
 	string result;
-	for (int i = 0; i <	digits.length() + 1; i++) {
+	for (int i = 0; i < digits.length(); i++) {
 		if (isdigit(digits[i])) {
 			result += digits[i];
 		}
-		else if(digits[i] == ' ') {
+		else if (digits[i] == ' ' && result != "") {
 			(*array).push_back(stoi(result));
 			result = "";
 		}
+	}
+	if (result != "") {
+		(*array).push_back(stoi(result));
+
 	}
 }

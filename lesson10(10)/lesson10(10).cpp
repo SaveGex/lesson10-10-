@@ -1,160 +1,432 @@
 ﻿#include <iostream>
-#include <iomanip>
-#include <Windows.h>
 #include <ctime>
-#include <cstdlib>
 #include <vector>
 #include <string>
+#include <map>
+#include <initializer_list>
 
 //bonk2 = find(array.begin(), array.end(), bot1);
 //index_bot = distance(array.begin(), bonk2);
 
 using namespace std;
 
-void Fill_Array(string digits, vector <int>* array);
-bool Check_Correct_Input(string check);
-int Infinite_Question(string check);
-void Erase(int index, vector<int>* array);
+int** Create_Array(int rows, int columns);
+int** Fill_Array(int **array, int rows, int columns);
+vector<int> Common_Value(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3);
+vector<int> Serch_Unique(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3);
+vector<int> Check_Arrays(int** array, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3);
+vector<int> Serch_Unique(int** array1, int** array3, int rows1, int rows3, int columns1, int columns3);
+vector<int> Negative_Unique_Digits(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3);
+vector<int> Check_Arrays_Negative(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3);
 
 int main() {
 	srand(time(nullptr));
+	int rows1, rows2, rows3;
+	int columns1, columns2, columns3;
 
-	int check_int, index;
-	bool ticket = true; //цикл
-	string digits;
-	vector <int> array;
-	vector<int> digits_which_be_move;
-	vector<int> buffer_array;
+	cout << "Enter the number of rows1: ";
+	cin >> rows1;
+	cout << "Enter the number of columns1: ";
+	cin >> columns1;
 
 
-	while (ticket) {
+	int** array1 = Create_Array(rows1, columns1);
 
-		cout << "write your digits: ";
-		getline(cin, digits);
-		Fill_Array(digits, &array);
+	cout << "Enter the number of rows2 ";
+	cin >> rows2;
+	cout << "Enter the number of columns2: ";
+	cin >> columns2;
 
-		cout << "\nComplete add? \n[1]Yes [2]No: ";
-		string check;
-		getline(cin, check);
-		bool ticket_correct = Check_Correct_Input(check);
 
-		if (!ticket_correct) {
-			check_int = Infinite_Question(check);
-		}
-		else {
-			check_int = stoi(check);
-		}
-		if (check_int == 1) {
-			ticket = false;
-		}
+	int** array2 = Create_Array(rows2, columns2);
 
-	}
+	cout << "Enter the number of rows3: ";
+	cin >> rows3;
+	cout << "Enter the number of columns3: ";
+	cin >> columns3;
+
+
+	int** array3 = Create_Array(rows3, columns3);
 
 	cout << endl;
 
-	for (int i = 0; i < array.size(); i++) {
-		cout << array[i] << ' ';
-	}
+	array1 = Fill_Array(array1, rows1, columns1);
+	array2 = Fill_Array(array2, rows2, columns2);
+	array3 = Fill_Array(array3, rows3, columns3);
 
-	cout << "(the numbers must match completely)\nWhich numbers you want to move: ";
-	getline(cin, digits);
-	Fill_Array(digits, &digits_which_be_move);
 
-	for (int a = 0; a < array.size(); a++) {
-		if (digits_which_be_move.size() > 0) {
-			for (int i = 0; i < digits_which_be_move.size(); i++) {
-				if (digits_which_be_move[i] == array[a]) {
-					buffer_array.push_back(digits_which_be_move[i]);
-					Erase(a, &array);
-					if (a == 0)	a = 0; // Уменьшение индекса a после удаления элемента
-					else		a--;
-					break;
-				}
-			}
+
+	//int args[][3] = {
+	//	{rows1, rows2, rows3},
+	//	{columns1, columns2, columns3}
+	//}; //ваша теорія не працює. Я дивився теорію про функції з необмеженою кількістю параметрів. Там не написано як звернутись до елемента va_arg за індексом. 
+	// ШІ мені також не надали відповідь, 
+	// хоча за їхніми словами елементи впорядковані і можна звертатись за індексом(на скільки я побачив це не на пряму)
+
+
+	vector<int> Common_Array = Common_Value(array1, array2, array3, rows1, rows2, rows3, columns1, columns2, columns3);
+	vector<int> Unique_Array = Serch_Unique(array1, array2, array3, rows1, rows2, rows3, columns1, columns2, columns3); //ну як на мене працює
+	vector<int> A_And_C = Serch_Unique(array1, array3, rows1, rows3, columns1, columns3);
+	vector<int> Negative_Unique = Negative_Unique_Digits(array1, array2, array3, rows1, rows2, rows3, columns1, columns2, columns3);
+
+
+	if (Common_Array.size() > 0) {
+		cout << endl << "Common digits: ";
+		for (int i = 0; i < Common_Array.size(); i++) {
+			cout << Common_Array[i] << ' ';
 		}
 	}
-	cout << "Where to move the numbers: ";
-	cin >> index;
-	index--;
-	if (index > array.size()) {
-		index = array.size();
+	if (Unique_Array.size() > 0) {
+		cout << endl << "Unique digits: ";
+		for (int i = 0; i < Unique_Array.size(); i++) {
+			cout << Unique_Array[i] << ' ';
+		}
 	}
-	for (int i = 0; i < buffer_array.size(); i++) {
-		array.insert(array.begin() + index + i, buffer_array[i]);
+	if (A_And_C.size() > 0) {
+		cout << endl << "A and C digits: ";
+		for (int i = 0; i < A_And_C.size(); i++) {
+			cout << A_And_C[i] << ' ';
+		}
+	}
+	if (Negative_Unique.size() > 0) {
+		cout << endl << "Negative unique digits: ";
+		for (int i = 0; i < Negative_Unique.size(); i++) {
+			cout << Negative_Unique[i] << ' ';
+		}
 	}
 
-	for (int i = 0; i < array.size(); i++) {
-		cout << array[i] << ' ';
+
+
+
+
+	for (int i = 0; i < rows1; i++) {
+		delete[] array1[i];
 	}
+	delete[] array1;
+	for (int i = 0; i < rows2; i++) {
+		delete[] array2[i];
+	}
+	delete[] array2;
+	for (int i = 0; i < rows3; i++) {
+		delete[] array3[i];
+	}
+	delete[] array3;
+
 	return 0;
 }
 
 
-void Erase(int index, vector<int>* array) {
-	array->erase(array->begin() + index);
+
+vector<int> Check_Arrays_Negative(int** array, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3) {
+	vector<int> Negative_Unique;
+	bool ticket1 = false, ticket2 = false;
+	for (int i = 0; i < rows1; i++) {
+		for (int i2 = 0; i2 < columns1; i2++) {
+			if (array[i][i2] > -1) {
+				continue;
+			}
+			for (int s = 0; s < rows2; s++) {
+				if (ticket1) 	break;
+
+				for (int s2 = 0; s2 < columns2; s2++) {
+					if (array[i][i2] == array2[s][s2]) {
+						ticket1 = true;
+						break;
+					}
+				}
+			}
+			for (int s = 0; s < rows3; s++) {
+				if (ticket2) 	break;
+
+				for (int s2 = 0; s2 < columns3; s2++) {
+					if (array[i][i2] == array3[s][s2]) {
+						ticket2 = true;
+						break;
+					}
+				}
+			}
+			auto have_or_not = find(Negative_Unique.begin(), Negative_Unique.end(), array[i][i2]);
+			bool ticket_repetition = true;
+			int index;
+			if (have_or_not != Negative_Unique.end()) {
+				index = distance(Negative_Unique.begin(), have_or_not);
+				int amount = Negative_Unique[index];
+				if (amount == array[i][i2]) {
+					ticket_repetition = false;
+				}
+			}
+
+			if (!ticket1 && !ticket2 && (Negative_Unique.size() < 1 || ticket_repetition)) {
+				Negative_Unique.push_back(array[i][i2]);
+			}
+			ticket1 = false;
+			ticket2 = false;
+		}
+	}
+
+	return Negative_Unique;
 }
 
 
 
-int Infinite_Question(string check) {
-	int digit;
-	string result;
-	for (int i = 0; i < check.length() + 1; i++) {
-		if (isdigit(check[i])) {
-			result += check[i];
+
+vector<int> Negative_Unique_Digits(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3) {
+	vector<int> Negative_Unique;
+
+	vector<int> Buffer1 = Check_Arrays_Negative(array1, array2, array3, rows1, rows2, rows3, columns1, columns2, columns3);
+	vector<int> Buffer2 = Check_Arrays_Negative(array2, array3, array1, rows2, rows3, rows1, columns2, columns3, columns1);
+	vector<int> Buffer3 = Check_Arrays_Negative(array3, array2, array1, rows3, rows2, rows1, columns3, columns2, columns1);
+
+	if (Buffer1.size() > 0) {
+		for (int i = 0; i < Buffer1.size(); i++) {
+			Negative_Unique.push_back(Buffer1[i]);
+		}
+	}
+	if (Buffer2.size() > 0) {
+		for (int i = 0; i < Buffer2.size(); i++) {
+			Negative_Unique.push_back(Buffer2[i]);
+		}
+	}
+	if (Buffer3.size() > 0) {
+		for (int i = 0; i < Buffer3.size(); i++) {
+			Negative_Unique.push_back(Buffer3[i]);
 		}
 	}
 
-	digit = stoi(result);
-	result = "";
 
-	while (digit < 1 && digit > 2) {
 
-		cout << "\n\033[31mComplete add?\033[0m \n[1]Yes [2]No: ";
-		getline(cin, check);
-		for (int i = 0; i < check.length() + 1; i++) {
-			if (isdigit(check[i])) {
-				result += check[i];
+	return Negative_Unique;
+}
+
+
+#pragma region Перевантаження, ТОМУ що я не знаю як зробити 1 функцію так щоб вона була універсальна. Я трохи думав над цим, але навіть в теорії не розумію що для чого потрібно. Мені здається щоб повертало булеве значення...
+vector<int> Check_Arrays(int** array1, int** array3, int rows1, int rows3, int columns1, int columns3) {
+	vector<int> A_And_C;
+
+	for (int i = 0; i < rows1; i++) {
+		for (int j = 0; j < columns1; j++) {
+
+			int element = array1[i][j];
+
+			for (int k = 0; k < rows3; k++) {
+				for (int l = 0; l < columns3; l++) {
+
+					if (element == array3[k][l]) {
+						if (find(A_And_C.begin(), A_And_C.end(), element) == A_And_C.end()) {
+							A_And_C.push_back(element);
+						}
+						break;
+					}
+				}
 			}
 		}
-		digit = stoi(result);
-		result = "";
-		cin.ignore();
+	}
+	return A_And_C;
+
+}
+
+vector<int> Serch_Unique(int** array1, int** array3, int rows1, int rows3, int columns1, int columns3) {
+	vector<int> A_And_C;
+
+	vector<int> Buffer1 = Check_Arrays(array1, array3, rows1, rows3, columns1, columns3);
+	vector<int> Buffer3 = Check_Arrays(array3, array1, rows3, rows1, columns3, columns1);
+	
+	for (int i = 0; i < Buffer1.size(); i++) {
+		A_And_C.push_back(Buffer1[i]);
+	}
+	for (int i = 0; i < Buffer3.size(); i++) {
+		A_And_C.push_back(Buffer3[i]);
 	}
 
-	return digit;
+	for (int i = 0; i < A_And_C.size(); i++) {
+		int digit = A_And_C[i];
+		for (int a = 0l; a < A_And_C.size(); a++) {
+			if (i == a) {
+				a++;
+			}
+			else if (a == A_And_C.size()) {
+				break;
+			}
+			if (digit==A_And_C[a]) {
+
+				A_And_C.erase(A_And_C.begin() + a);
+				a--;
+			}
+		}
+		
+	}
+
+
+	return A_And_C;
 }
 
 
 
 
-bool Check_Correct_Input(string check) {
-	bool ticket_correct = true;
-	for (int i = 0; i < check.length() + 1; i++) {
-		if (!isdigit(check[i])) {
-			ticket_correct = false;
-			break;
+vector<int> Serch_Unique(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3) {
+	vector<int> Unique_Array;
+
+	vector<int> Buffer1 = Check_Arrays(array1, array2, array3, rows1, rows2, rows3, columns1, columns2, columns3);
+	vector<int> Buffer2 = Check_Arrays(array2, array3, array1, rows2, rows3, rows1, columns2, columns3, columns1);
+	vector<int> Buffer3 = Check_Arrays(array3, array2, array1, rows3, rows2, rows1, columns3, columns2, columns1);
+
+	if (Buffer1.size() > 0) {
+		for (int i = 0; i < Buffer1.size(); i++) {
+			Unique_Array.push_back(Buffer1[i]);
 		}
 	}
-	return ticket_correct;
+	if (Buffer2.size() > 0) {
+		for (int i = 0; i < Buffer2.size(); i++) {
+			Unique_Array.push_back(Buffer2[i]);
+		}
+	}
+	if (Buffer3.size() > 0) {
+		for (int i = 0; i < Buffer3.size(); i++) {
+			Unique_Array.push_back(Buffer3[i]);
+		}
+	}
+	return Unique_Array;
 }
 
 
 
 
-void Fill_Array(string digits, vector <int>* array) {
-	string result;
-	for (int i = 0; i < digits.length(); i++) {
-		if (isdigit(digits[i])) {
-			result += digits[i];
-		}
-		else if (digits[i] == ' ' && result != "") {
-			(*array).push_back(stoi(result));
-			result = "";
-		}
-	}
-	if (result != "") {
-		(*array).push_back(stoi(result));
 
+vector <int> Check_Arrays(int** array, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3) {
+	vector<int> Buffer;
+	bool ticket1 = false, ticket2 = false;
+	for (int i = 0; i < rows1; i++) {
+		for (int i2 = 0; i2 < columns1; i2++) {
+
+			for (int s = 0; s < rows2; s++) {
+				if (ticket1) 	break;
+
+				for (int s2 = 0; s2 < columns2; s2++) {
+					if (array[i][i2] == array2[s][s2]) {
+						ticket1 = true;
+						break;
+					}
+				}
+			}
+			for (int s = 0; s < rows3; s++) {
+				if (ticket2) 	break;
+
+				for (int s2 = 0; s2 < columns3; s2++) {
+					if (array[i][i2] == array3[s][s2]) {
+						ticket2 = true;
+						break;
+					}
+				}
+			}
+			auto have_or_not = find(Buffer.begin(), Buffer.end(), array[i][i2]);
+			bool ticket_repetition = true;
+			int index;
+			if (have_or_not != Buffer.end()) {
+				index = distance(Buffer.begin(), have_or_not);
+				int amount = Buffer[index];
+				if (amount == array[i][i2]) {
+					ticket_repetition = false;
+				}
+			}
+
+			if (!ticket1 && !ticket2 && (Buffer.size() < 1 || ticket_repetition)) {
+				Buffer.push_back(array[i][i2]);
+			}
+			ticket1 = false;
+			ticket2 = false;
+		}
 	}
+	return Buffer;
+}
+
+
+
+
+
+
+vector<int> Common_Value(int** array1, int** array2, int** array3, int rows1, int rows2, int rows3, int columns1, int columns2, int columns3) {
+	vector<int> Common_Array;
+	bool ticket1 = false, ticket2 = false;
+	for (int i = 0; i < rows1; i++) {
+		for (int i2 = 0; i2 < columns1; i2++) {
+
+			for (int s = 0; s < rows2; s++) {
+				if (ticket1) 	break;
+				
+				for (int s2 = 0; s2 < columns2; s2++) {
+					if (array1[i][i2] == array2[s][s2]) {
+						ticket1 = true;
+						break;
+					}
+				}
+			}
+			for (int s = 0; s < rows3; s++) {
+				if (ticket2) 	break;
+
+				for (int s2 = 0; s2 < columns3; s2++) {
+					if (array1[i][i2] == array3[s][s2]) {
+						ticket2 = true;
+						break;
+					}
+				}
+			}
+			
+			auto have_or_not = find(Common_Array.begin(), Common_Array.end(), array1[i][i2]);
+			bool ticket_repetition = true;
+			int index;
+			if (have_or_not != Common_Array.end()) {
+				index = distance(Common_Array.begin(), have_or_not);
+				int amount = Common_Array[index];
+				if (amount == array1[i][i2]) {
+					ticket_repetition = false;
+				}
+			}
+
+			if (ticket1 && ticket2 && (Common_Array.size() < 1 || ticket_repetition)) {
+				Common_Array.push_back(array1[i][i2]);
+			}
+			ticket1 = false;
+			ticket2 = false;
+			
+		}
+	}
+	
+
+
+	return Common_Array;
+}
+
+
+
+
+
+int** Fill_Array(int** array, int rows, int columns) {
+	for (int row = 0; row < rows; row++) {
+
+		for (int col = 0; col < columns; col++) {
+			array[row][col] = -10 + rand() % (10 + 10 -1);
+			if (array[row][col] < 10 && array[row][col]> -10)	cout << ' ';
+			cout << array[row][col] << ' ';
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < columns*2; i++) {
+		cout << "_";
+	}
+	cout << endl;
+	return array;
+}
+
+
+
+
+int** Create_Array(int rows, int columns) {
+
+	int** array = new int* [rows];
+
+	for (int i = 0; i < rows; ++i) {
+		array[i] = new int[columns];
+	}
+
+	return array;
 }

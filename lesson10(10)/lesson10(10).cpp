@@ -1,40 +1,55 @@
 ﻿#include <iostream>
-#include <ctime>
 #include <vector>
 #include <string>
-#include <locale>
+#include <ctime>
 #include <Windows.h>
 
 using namespace std;
 
-bool Step_by_Step(int counter, int counter_end, char sentence[]);
+void Add_row(vector<vector<int>>* ptr);
 
 int main() {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 
-	char sentence[] = "TIKKIT";
-	bool ticket = true;
-	int counter = 0, counter_from_end = strlen(sentence)-1;
-	
-	for (int i = 0; i<strlen(sentence)-1; i++) {
-		ticket = Step_by_Step(counter, counter_from_end, sentence);
-		if (!ticket) {
-			cout << "Word not is palindrome";
-			return 0;
+	srand(time(nullptr));
+
+	int rows = 3, columns = 5;
+	vector<vector<int>> array(rows);
+
+
+	for (int i = 0; i < array.size(); i++) {
+		for (int a = 0; a < columns; a++) {
+			array[i].push_back(rand() % 9);
+			cout << array[i][a] << ' ';
 		}
-		counter++;
-		counter_from_end--;
+		cout << endl;
 	}
-	cout << "Word is palindrome";
+	cout << "\033[36m";
+	for (int i = 0; i < 5; i++) {
+		cout << "_ ";
+	}
+	cout << "\033[0m" << endl;
+	Add_row(&array);
+
+	for (int i = 0; i < array.size(); i++) {
+		for (int a = 0; a < columns; a++) {
+			cout << array[i][a] << ' ';
+		}
+		cout << endl;
+	}
+
 	return 0;
 }
 
 
-bool Step_by_Step(int counter, int counter_end, char sentence[]) {
-	if (sentence[counter] != sentence[counter_end]) {
-		return false;
+void Add_row(vector<vector<int>>* ptr) {
+	vector<int> buffer((*ptr)[0].size());
+	for (int i = 0; i < (*ptr)[0].size(); i++) {
+		buffer[i] = 9 + rand() % (20 + 9 - 1);
 	}
-	return true;
+	(*ptr).push_back(buffer);
 }
+
+
 

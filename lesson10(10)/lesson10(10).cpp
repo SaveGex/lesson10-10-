@@ -13,17 +13,19 @@ int main() {
 
 	char sentence[] = "About No description, website, or topics provided.";
 	char *ptr = sentence;
-	int count_letters = 0, any_symbols = 0;
+	int words = 0;
+	bool ticket = false;
 	while (*ptr != '\0') {
-		if  (isalpha(*ptr)){//(isalpha(static_cast<unsigned char>(*ptr))) НЕ ПРАЦЮЄ
-			count_letters++;
+		if (isalpha(*ptr)) {
+			ticket = true;
 		}
-		else {
-			any_symbols++;
+		if (ticket && (*ptr == ',' || *ptr == ' ' || *ptr == '.')) {//(isalpha(static_cast<unsigned char>(*ptr))) НЕ ПРАЦЮЄ
+			words++;
+			ticket = false;
 		}
 		ptr++;
 	}
-	cout << "Letters: " << count_letters << endl << "any symbols: " << any_symbols;
+	cout << "Letters: " << words;
 	return 0;
 }
 
